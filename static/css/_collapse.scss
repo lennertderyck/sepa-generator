@@ -1,0 +1,9 @@
+[data-collapse-target] {
+    &.collapse-hidden {
+        display: none;
+    }
+
+    &.collapse-show {
+        display: block;
+    }
+}

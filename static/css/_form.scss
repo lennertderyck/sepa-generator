@@ -1,0 +1,10 @@
+input.form-control {
+    border: none;
+    border-radius: 7px;
+    background-color: $accent-main;
+
+
+    &.form-control:focus, &.form-control:focus-within {
+        background-color: $accent-main;
+    }
+}
