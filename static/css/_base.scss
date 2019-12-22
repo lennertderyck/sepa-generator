@@ -20,6 +20,8 @@ $accent-2: #768671;
 $accent-3: #AAAAAA;
 $accent-4: #707070;
 
+$border-radius: 7px;
+
 :root {
     --font-main: 'Brown';
     --font-scnd: 'Solway';
@@ -29,6 +31,8 @@ $accent-4: #707070;
     --accent-2: #768671;
     --accent-3: #AAAAAA;
     --accent-4: #707070;
+
+    --border-radius: 7px;
 }
 
 * {
@@ -38,52 +42,103 @@ $accent-4: #707070;
 
 *, *:hover, *:focus {
     outline: none;
-    box-shadow: none !important;
+    box-shadow: none;
     border: none;
 }
 
+body {
+    z-index: 0;
+    background-color: white
+}
+
+.container.xsm {
+    max-width: 600px;
+}
+
+.maxw-fit {max-width: fit-content;}
+
 .btn, .btn:focus, .btn:hover {
+    --icon-dim: 20px;
+    display: flex;
+    align-items: center;
+    align-content: center;
     position: relative;
-    padding: .375rem .75rem;
-    background-color: transparent;
-    border: none !important;
-    border-radius: 7px;
+    height: fit-content;
+    padding: .375rem;
+    background-color: $accent-1;
     font-family: $font-main;
     font-weight: bold;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 7px;
     color: $accent-2;
     z-index: 1;
-
-    transition: all .2s ease-in-out;
-
-    &::after {
-        content: ' ';
-        position: absolute;
-        left: 0px;
-        top: 0px;
-        bottom: 0px;
-        height: inherit;
-        width: 70%;
-        border-radius: inherit;
-        background-color: $accent-1;
-        z-index: -1;
-        transition: inherit
-    }
-
-    &:hover::after {
-        width: 100%;
-    }
-
+    
     svg.feather {
-        margin-right: 8px;
-        width: 20px;
+        width: var(--icon-dim);
+        height: var(--icon-dim);
         stroke-width: 2;
         stroke: $accent-2;
     }
+
+    &.btn-effect, &.btn-effect:focus, &.btn-effect:hover {
+        padding: .375rem .75rem .375rem .47rem;
+        background-color: transparent;
+    
+        // transform: translateX(15%);
+        transition: all .3s ease-in-out;
+    
+        &::after {
+            content: ' ';
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            bottom: 0px;
+            height: 100%;
+            width: 70%;
+            border-radius: inherit;
+            background-color: $accent-1;
+            z-index: -1;
+            transition: inherit
+        }
+    
+        &:hover {
+            &::after {
+                width: 100%;
+            }
+        }
+    
+        svg.feather {
+            margin-right: 8px;
+            width: 20px;
+            stroke-width: 2;
+            stroke: $accent-2;
+        }
+    }
+
+    &.btn-close {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        border-radius: 0px 7px 0px 40px;
+
+        svg.feather {
+            --icon-dim: 15px;
+            transform: translate(2px, -1px);
+            transform: translate(3px, -2px);
+        }
+    }
+}
+
+
+
+.animated {
+    transition: all .3s ease-in-out;
 }
 
 /* SECTIONS */
-[data-section="payment-details"] {
-    &.container {
-        max-width: 600px;
-    }
+
+[data-label="qrCode"] {
+    // border: 20px solid white;
+    border-radius: 7px;
 }

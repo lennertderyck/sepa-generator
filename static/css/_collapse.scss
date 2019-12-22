@@ -1,9 +1,45 @@
-[data-collapse-target] {
-    &.collapse-hidden {
-        display: none;
+/* [data-sesam-target] {
+    &.sesam-hidden {
+        // display: none;
     }
 
-    &.collapse-show {
+    &.sesam-show {
         display: block;
+    }
+} */
+
+.sesam-modal {
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background: #00000047;
+    z-index: -2;
+
+    // transform: scale(0.8);
+    opacity: 0;
+    filter: blur(10px);
+    // border-radius: 100%;
+
+    &.sesam-show {
+        // transform: scale(1);
+        opacity: 1;
+        z-index: 10;
+        filter: blur(0px);
+        // border-radius: 0%;
+    }
+}
+
+body.api-detected {
+    .sesam-modal[data-label="payment-screen"] {
+        background: white;
+        opacity: 1;
+        z-index: 10;
+        filter: blur(0px);
+
+        .btn-close {
+            position: fixed;
+        }
     }
 }
