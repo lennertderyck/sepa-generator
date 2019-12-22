@@ -119,8 +119,8 @@ function registerService(input) {
             registerService(arguments.callee.name);
             this.cached();
 
-            createCookie('settingsName',this.settings.name);
-            createCookie('settingsAccount',this.settings.account);
+            createCookie('settingsName',this.settings.name, 3000);
+            createCookie('settingsAccount',this.settings.account, 3000);
 
             this.generateUI();
         },
