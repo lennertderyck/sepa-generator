@@ -42,6 +42,10 @@ body {
   max-width: 600px;
 }
 
+.container.md {
+  max-width: 800px;
+}
+
 .maxw-fit {
   max-width: -webkit-fit-content;
   max-width: -moz-fit-content;

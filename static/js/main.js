@@ -2,6 +2,7 @@ function registerService(input) {
     console.log(`%c[service] ${input}()`, 'font-weight: bold');
 }
 
+
 (() => {
     let generatedQRSrc;
 
@@ -21,6 +22,11 @@ function registerService(input) {
             this.btn.settingsSave.addEventListener('click', () => {
                 this.saveSettings();
             })
+
+            console.log(this.db.generated().stringify())
+
+            // this.db.generated().remove();
+            // console.log(`${this.db.generated().first().id}`)
         },
 
         cached() {
@@ -73,6 +79,8 @@ function registerService(input) {
                 recieved: TAFFY().store('recievedPayments'),
             }
 
+            let dbGenerated = TAFFY().store('generatedPayments');
+
             this.cookies = {
                 settings: {
                     name: getCookie('settingsName'),
@@ -89,6 +97,8 @@ function registerService(input) {
             document.querySelector('#inputSettingsName').value = this.cookies.settings.name;
             document.querySelector('#inputSettingsAccount').value = this.cookies.settings.account;
             document.querySelector('#inputRequestAccount').value = this.cookies.settings.account;
+
+            this.generateQRList();
         },
 
         generatePayment() {
@@ -113,6 +123,51 @@ function registerService(input) {
             this.window.preview.url.value = '';
             this.window.preview.url.value = generatedAPIURL;
 
+            if (this.db.generated().first().id == undefined) {
+                this.db.generated.insert({"id":1,"name":this.settings.name,"account":this.settings.account,"amount":this.requestInput.amount,"descr":this.requestInput.descr,"contact":this.requestInput.contact,"code":generatedQRSrc,"api":generatedAPIURL});
+            } else {
+                this.db.generated.insert({"id":this.db.generated().last().id+1,"name":this.settings.name,"account":this.settings.account,"amount":this.requestInput.amount,"descr":this.requestInput.descr,"contact":this.requestInput.contact,"code":generatedQRSrc,"api":generatedAPIURL});
+            }
+            // this.db.generated({}).remove(true);
+
+            this.generateQRList();
+        },
+
+        generateQRList() {
+            let tempStr = '';
+            this.db.generated().each((r) => {
+                tempStr += `
+                <div data-label="record" class="row bg-color-main p-3 mb-3 bd-radius">
+                    <div class="col-auto pl-0">
+                        <img src="${r.code}" alt="" width="40" height="40">
+                    </div>
+                    <div class="col-auto">
+                        <p class="mb-n2 small">amount</p>
+                        <p class="mb-0 font-scnd">${r.amount}</p>
+                    </div>
+                    <div class="col-auto">
+                        <p class="mb-n2 small">account</p>
+                        <p class="mb-0 font-scnd">${r.account}</p>
+                    </div>
+                    <div class="col-auto">
+                        <p class="mb-n2 small">from</p>
+                        <p class="mb-0 font-scnd">${r.contact}</p>
+                    </div>
+                    <div class="col-auto">
+                        <p class="mb-n2 small">because</p>
+                        <p class="mb-0 font-scnd">${r.descr}</p>
+                    </div>
+                    <div class="ml-autocol-auto d-none align-items-center">
+                        <i data-feather="share-2"></i>
+                        <!-- <p class="mb-0 font-scnd small">share</p> -->
+                    </div>
+                </div>
+                `
+
+                console.log('logged')
+            });
+
+            document.querySelector('[data-label="record-list"]').innerHTML = tempStr;
         },
 
         saveSettings() {

@@ -54,6 +54,9 @@ body {
 .container.xsm {
     max-width: 600px;
 }
+.container.md {
+    max-width: 800px;
+}
 
 .maxw-fit {max-width: fit-content;}
 
@@ -141,4 +144,10 @@ body {
 [data-label="qrCode"] {
     // border: 20px solid white;
     border-radius: 7px;
+}
+
+[data-section="generated-list"] {
+    [data-label="record"] {
+
+    }
 }
