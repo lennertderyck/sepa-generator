@@ -147,7 +147,7 @@ function registerService(input) {
                     </div>
                     <div class="col-auto">
                         <p class="mb-n2 small">amount</p>
-                        <p class="mb-0 font-scnd">${r.amount}</p>
+                        <p class="mb-0 font-scnd">€${r.amount.toString().replace('.',',')}</p>
                     </div>
                     <div class="col-auto">
                         <p class="mb-n2 small">account</p>
