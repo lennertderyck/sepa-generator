@@ -148,6 +148,8 @@ body {
 
 [data-section="generated-list"] {
     [data-label="record"] {
+        cursor: pointer;
+        
         svg {
             width: 30px;
             fill: darken($accent-main, 55%);
