@@ -135,7 +135,7 @@ function registerService(input) {
 
         generateQRList() {
             let tempStr = '';
-            this.db.generated().each((r) => {
+            this.db.generated().order("id desc").each((r) => {
                 const div = document.createElement('div');
                 div.classList.add('row','bg-color-main','p-3','mb-3','bd-radius');
                 div.setAttribute('data-label','record');
