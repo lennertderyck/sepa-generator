@@ -143,6 +143,15 @@ body {
   border-radius: 7px;
 }
 
+[data-section="generated-list"] [data-label="record"] svg {
+  width: 30px;
+  fill: #4e7d7d;
+}
+
+[data-section="generated-list"] [data-label="record"] p {
+  color: #4e7d7d;
+}
+
 /* [data-sesam-target] {
     &.sesam-hidden {
         // display: none;

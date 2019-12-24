@@ -148,6 +148,13 @@ body {
 
 [data-section="generated-list"] {
     [data-label="record"] {
+        svg {
+            width: 30px;
+            fill: darken($accent-main, 55%);
+        }
 
+        p {
+            color: darken($accent-main, 55%);
+        }
     }
 }

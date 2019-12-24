@@ -136,10 +136,14 @@ function registerService(input) {
         generateQRList() {
             let tempStr = '';
             this.db.generated().each((r) => {
-                tempStr += `
-                <div data-label="record" class="row bg-color-main p-3 mb-3 bd-radius">
-                    <div class="col-auto pl-0">
-                        <img src="${r.code}" alt="" width="40" height="40">
+                const div = document.createElement('div');
+                div.classList.add('row','bg-color-main','p-3','mb-3','bd-radius');
+                div.setAttribute('data-label','record');
+                div.setAttribute('data-record-id',r.id);
+                div.setAttribute('data-sesam-trigger','generatedQRCode');
+                div.innerHTML = `
+                    <div class="col-auto pl-0 d-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><title>icon_qr_code</title><g data-name="Laag 2"><g id="Laag_1-2" data-name="Laag 1"><path d="M0,0V23.33H23.33V0ZM16.67,16.67h-10v-10h10Z"/><path d="M0,56.67V80H23.33V56.67ZM16.67,73.33h-10v-10h10Z"/><path d="M56.67,0V23.33H80V0ZM73.33,16.67h-10v-10h10Z"/><polygon points="73.33 30 73.33 50 56.67 50 56.67 56.67 80 56.67 80 30 73.33 30"/><polygon points="56.67 63.33 56.67 80 63.33 80 63.33 70 73.33 70 73.33 80 80 80 80 63.33 56.67 63.33"/><polygon points="30 0 30 6.67 43.33 6.67 43.33 23.33 50 23.33 50 0 30 0"/><polygon points="43.33 30 43.33 43.33 30 43.33 30 63.33 43.33 63.33 43.33 80 50 80 50 56.67 36.67 56.67 36.67 50 50 50 50 36.67 56.67 36.67 56.67 43.33 63.33 43.33 63.33 30 43.33 30"/><rect x="30" y="70" width="6.67" height="10"/><rect x="13.33" y="43.33" width="10" height="6.67"/><polygon points="30 13.33 30 30 0 30 0 50 6.67 50 6.67 36.67 36.67 36.67 36.67 13.33 30 13.33"/></g></g></svg>
                     </div>
                     <div class="col-auto">
                         <p class="mb-n2 small">amount</p>
@@ -161,13 +165,30 @@ function registerService(input) {
                         <i data-feather="share-2"></i>
                         <!-- <p class="mb-0 font-scnd small">share</p> -->
                     </div>
-                </div>
                 `
-
+                div.addEventListener('click', () => {
+                    this.generateHistoryPayment(r.name,r.code,r.amount,r.account,r.contact,r.descr,r.api)
+                })
                 console.log('logged')
+                document.querySelector('[data-label="record-list"]').appendChild(div);
             });
 
-            document.querySelector('[data-label="record-list"]').innerHTML = tempStr;
+            // document.querySelector('[data-label="record-list"]').innerHTML = tempStr;
+        },
+
+        generateHistoryPayment(name,code,amount,account,contact,descr,api) {
+            this.window.code.img.src = code;
+            this.window.code.copy.addEventListener('click', () => {
+                this.copy(api);
+            });
+
+            this.window.preview.reciever.innerHTML = name;
+            this.window.preview.account.innerHTML = account;
+            this.window.preview.amount.innerHTML = `€${amount.toString().replace('.', ',')}`;
+            this.window.preview.descr.innerHTML = descr;
+
+            this.window.preview.url.value = '';
+            this.window.preview.url.value = api;
         },
 
         saveSettings() {
@@ -184,12 +205,6 @@ function registerService(input) {
             registerService(arguments.callee.name);
 
             if (window.location.href.indexOf("?api") > -1) {
-                // this.apiQueries.reciever = this.getQueryVariable('r');
-                // this.apiQueries.account = this.getQueryVariable('a');
-                // this.apiQueries.amount = this.getQueryVariable('m');
-                // this.apiQueries.descr = this.getQueryVariable('d');
-                // this.apiQueries.contact = this.getQueryVariable('c');
-
                 document.body.classList.add('api-detected');
                 // document.querySelector('[data-sesam-trigger="payment"]').click();
 
@@ -200,6 +215,8 @@ function registerService(input) {
                 this.window.api.account.innerHTML = decodeURI(this.getQueryVariable('a'));
                 this.window.api.amount.innerHTML = `€${decodeURI(this.getQueryVariable('m')).toString().replace('.',',')}`;
                 this.window.api.descr.innerHTML = decodeURI(this.getQueryVariable('d'));
+
+                this.copy(decodeURI(this.getQueryVariable('a')));
             }
         },
 
