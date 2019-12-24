@@ -108,7 +108,7 @@ function registerService(input) {
             //https://haegepoorters.be/pay/generated?title=TITEL&amount=333&description=BESCHRIJVING&reciever=groepskas&account=BE18%207360%203138%209365
 
             generatedQRSrc = `https://qrcode.tec-it.com/API/QRCode?data=BCD%0a001%0a1%0aSCT%0aKREDBEBB%0a${this.settings.name}%0a${this.requestInput.account}%0a${this.requestInput.amount}%0a%0a${this.requestInput.descr}&backcolor=%23ffffff&method=image`
-            let generatedAPIURL = `${window.location.href.split('/?')[0]}/?api&r=${this.settings.name}&a=${this.requestInput.account}&m=${this.requestInput.amount}&d=${this.requestInput.descr}&c=${this.requestInput.contact}`
+            let generatedAPIURL = `${window.location.href.split('/?')[0]}?api&r=${this.settings.name}&a=${this.requestInput.account}&m=${this.requestInput.amount}&d=${this.requestInput.descr}&c=${this.requestInput.contact}`
 
             this.window.code.img.src = generatedQRSrc;
             this.window.code.copy.addEventListener('click', () => {
