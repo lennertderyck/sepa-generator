@@ -23,10 +23,13 @@ function registerService(input) {
                 this.saveSettings();
             })
 
-            console.log(this.db.generated().stringify())
-
-            // this.db.generated().remove();
-            // console.log(`${this.db.generated().first().id}`)
+            this.btn.delete.paymentHistory.addEventListener('click', () => {
+                this.removeHistoryPaymentRecords();
+            })
+            
+            this.settings = {
+                maxHistoryRecords: 10,
+            }
         },
 
         cached() {
@@ -47,7 +50,10 @@ function registerService(input) {
 
             this.btn = {
                 generate: document.querySelector('[data-label="generate-code"]'),
-                settingsSave: document.querySelector('[data-label="save-settings"]')
+                settingsSave: document.querySelector('[data-label="save-settings"]'),
+                delete: {
+                    paymentHistory: document.querySelector('[data-label="delete-payment-history"]')
+                }
             }
 
             this.window = {
@@ -87,6 +93,8 @@ function registerService(input) {
                     account: getCookie('settingsAccount'),
                 }
             }
+
+            this.generatePaymentHistoryCounter = 0;
         },
 
         generateUI() {
@@ -98,7 +106,7 @@ function registerService(input) {
             document.querySelector('#inputSettingsAccount').value = this.cookies.settings.account;
             document.querySelector('#inputRequestAccount').value = this.cookies.settings.account;
 
-            this.generateQRList();
+            this.generateHistory();
         },
 
         generatePayment() {
@@ -110,7 +118,7 @@ function registerService(input) {
             generatedQRSrc = `https://qrcode.tec-it.com/API/QRCode?data=BCD%0a001%0a1%0aSCT%0aKREDBEBB%0a${this.settings.name}%0a${this.requestInput.account}%0a${this.requestInput.amount}%0a%0a${this.requestInput.descr}&backcolor=%23ffffff&method=image`
             let generatedAPIURL = `${window.location.href.split('/?')[0]}?api&r=${this.settings.name}&a=${this.requestInput.account}&m=${this.requestInput.amount}&d=${this.requestInput.descr}&c=${this.requestInput.contact}`
 
-            this.window.code.img.src = generatedQRSrc;
+            this.window.code.img = this.generateQRImage(generatedQRSrc);
             this.window.code.copy.addEventListener('click', () => {
                 this.copy(generatedAPIURL);
             });
@@ -129,13 +137,28 @@ function registerService(input) {
                 this.db.generated.insert({"id":this.db.generated().last().id+1,"name":this.settings.name,"account":this.settings.account,"amount":this.requestInput.amount,"descr":this.requestInput.descr,"contact":this.requestInput.contact,"code":generatedQRSrc,"api":generatedAPIURL});
             }
             // this.db.generated({}).remove(true);
-
-            this.generateQRList();
+            this.generateHistory();
         },
 
-        generateQRList() {
+        generateHistory() {
+            if (this.generatePaymentHistoryCounter !== 0) {
+                document.querySelector('[data-label="record-list"]').innerHTML = '';
+            } else {
+                this.btn.delete.paymentHistory.classList.add('d-none')
+            }
             let tempStr = '';
             this.db.generated().order("id desc").each((r) => {
+                this.generatePaymentHistoryCounter++
+                if (this.generatePaymentHistoryCounter >= this.settings.maxHistoryRecords + 1) {
+                    let lastGenerated = this.db.generated().first().id;
+                    this.db.generated({'id':lastGenerated}).remove();
+                }
+
+                if (this.generatePaymentHistoryCounter == 1) {
+                    document.querySelector('[data-label="record-list"] p').classList.add('d-none');
+                    this.btn.delete.paymentHistory.classList.remove('d-none')
+                }
+
                 const div = document.createElement('div');
                 div.classList.add('row','bg-color-main','p-3','mb-3','bd-radius');
                 div.setAttribute('data-label','record');
@@ -169,7 +192,6 @@ function registerService(input) {
                 div.addEventListener('click', () => {
                     this.generateHistoryPayment(r.name,r.code,r.amount,r.account,r.contact,r.descr,r.api)
                 })
-                console.log('logged')
                 document.querySelector('[data-label="record-list"]').appendChild(div);
             });
 
@@ -189,6 +211,29 @@ function registerService(input) {
 
             this.window.preview.url.value = '';
             this.window.preview.url.value = api;
+        },
+
+        generateQRImage(url) {
+            var request;
+            if (window.XMLHttpRequest)
+                request = new XMLHttpRequest();
+            else
+            request = new ActiveXObject("Microsoft.XMLHTTP");
+            request.open('GET', url, false);
+            request.send();
+            if (request.status === 404) {
+                return `
+                    <div>
+                        <i data-feather="frown"></i>
+                        <p>qr code couldn’t be generated, try again later</p>
+                    </div>
+                `
+                && feather.replace();
+            } else {
+                return `
+                    <img data-label="qrCode" src="${url}" alt="" width="160" height="160">
+                `
+            }
         },
 
         saveSettings() {
@@ -240,7 +285,13 @@ function registerService(input) {
                     if(pair[0] == variable){return pair[1];}
             }
             return(false);
-        }
+        },
+
+        removeHistoryPaymentRecords() {
+            this.db.generated().remove();
+            this.generateHistory()
+            document.querySelector('[data-label="record-list"] p').classList.remove('d-none');
+        },
     }
 
     app.initialize();

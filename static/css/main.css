@@ -114,7 +114,7 @@ body {
 .btn.btn-effect svg.feather, .btn.btn-effect:focus svg.feather, .btn.btn-effect:hover svg.feather, .btn:focus.btn-effect svg.feather, .btn:focus.btn-effect:focus svg.feather, .btn:focus.btn-effect:hover svg.feather, .btn:hover.btn-effect svg.feather, .btn:hover.btn-effect:focus svg.feather, .btn:hover.btn-effect:hover svg.feather {
   margin-right: 8px;
   width: 20px;
-  stroke-width: 2;
+  stroke-width: 2.5;
   stroke: #768671;
 }
 
@@ -133,6 +133,18 @@ body {
           transform: translate(3px, -2px);
 }
 
+.btn.btn-warning, .btn.btn-warning:focus, .btn.btn-warning:hover, .btn:focus.btn-warning, .btn:focus.btn-warning:focus, .btn:focus.btn-warning:hover, .btn:hover.btn-warning, .btn:hover.btn-warning:focus, .btn:hover.btn-warning:hover {
+  color: #867171;
+}
+
+.btn.btn-warning::after, .btn.btn-warning:focus::after, .btn.btn-warning:hover::after, .btn:focus.btn-warning::after, .btn:focus.btn-warning:focus::after, .btn:focus.btn-warning:hover::after, .btn:hover.btn-warning::after, .btn:hover.btn-warning:focus::after, .btn:hover.btn-warning:hover::after {
+  background-color: #efcfcf;
+}
+
+.btn.btn-warning svg.feather, .btn.btn-warning:focus svg.feather, .btn.btn-warning:hover svg.feather, .btn:focus.btn-warning svg.feather, .btn:focus.btn-warning:focus svg.feather, .btn:focus.btn-warning:hover svg.feather, .btn:hover.btn-warning svg.feather, .btn:hover.btn-warning:focus svg.feather, .btn:hover.btn-warning:hover svg.feather {
+  stroke: #867171;
+}
+
 .animated {
   -webkit-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
@@ -141,6 +153,8 @@ body {
 /* SECTIONS */
 [data-label="qrCode"] {
   border-radius: 7px;
+  width: 160px;
+  height: 160px;
 }
 
 [data-section="generated-list"] [data-label="record"] {
