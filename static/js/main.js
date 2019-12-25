@@ -118,7 +118,7 @@ function registerService(input) {
             generatedQRSrc = `https://qrcode.tec-it.com/API/QRCode?data=BCD%0a001%0a1%0aSCT%0aKREDBEBB%0a${this.settings.name}%0a${this.requestInput.account}%0a${this.requestInput.amount}%0a%0a${this.requestInput.descr}&backcolor=%23ffffff&method=image`
             let generatedAPIURL = `${window.location.href.split('/?')[0]}?api&r=${this.settings.name}&a=${this.requestInput.account}&m=${this.requestInput.amount}&d=${this.requestInput.descr}&c=${this.requestInput.contact}`
 
-            this.window.code.img = this.generateQRImage(generatedQRSrc);
+            this.window.code.img.innerHTML = this.generateQRImage(generatedQRSrc);
             this.window.code.copy.addEventListener('click', () => {
                 this.copy(generatedAPIURL);
             });
@@ -214,26 +214,19 @@ function registerService(input) {
         },
 
         generateQRImage(url) {
-            var request;
-            if (window.XMLHttpRequest)
-                request = new XMLHttpRequest();
-            else
-            request = new ActiveXObject("Microsoft.XMLHTTP");
-            request.open('GET', url, false);
-            request.send();
-            if (request.status === 404) {
-                return `
-                    <div>
-                        <i data-feather="frown"></i>
-                        <p>qr code couldn’t be generated, try again later</p>
-                    </div>
-                `
-                && feather.replace();
-            } else {
-                return `
-                    <img data-label="qrCode" src="${url}" alt="" width="160" height="160">
-                `
+            var request = false;
+            if (window.XMLHttpRequest) {
+                    request = new XMLHttpRequest;
+            } else if (window.ActiveXObject) {
+                    request = new ActiveXObject("Microsoft.XMLHttp");
             }
+
+            if (request) {
+                    request.open("GET", url);
+                    if (request.status == 200) { return true; }
+            }
+
+            return false;
         },
 
         saveSettings() {
