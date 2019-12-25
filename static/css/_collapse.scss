@@ -44,3 +44,49 @@ body.api-detected {
         }
     }
 }
+
+.sesam-collapse {
+    transform-origin: top;
+    transition: all .3s ease-in-out;
+
+    &.sesam-hidden {
+        overflow: hidden;
+        transform: scaleY(0);
+        height: 0px;
+    }
+}
+
+.sesam-hidden {
+    transform-origin: top;
+    transition: all .3s ease-in-out;
+
+    .sesam-collapse {
+        overflow: hidden;
+        transform: scaleY(0);
+        height: 0px;
+
+        transform-origin: top;
+    transition: all .3s ease-in-out;
+    }
+}
+
+[data-sesam-target="historyList"] {
+    &.sesam-show {
+        button[data-sesam-trigger="historyList"] {
+            span::before {
+                content: 'hide';
+            }
+        }
+    }
+
+    &.sesam-hidden { 
+        button[data-sesam-trigger="historyList"] {
+            span::before {
+                content: 'show';
+            }
+        }
+        button[data-label="delete-payment-history"] {
+            display: none;
+        }
+    }
+}

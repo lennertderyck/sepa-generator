@@ -2,6 +2,7 @@ function registerService(input) {
     console.log(`%c[service] ${input}()`, 'font-weight: bold');
 }
 
+let toastIndex = 0;
 
 (() => {
     let generatedQRSrc;
@@ -118,7 +119,7 @@ function registerService(input) {
             generatedQRSrc = `https://qrcode.tec-it.com/API/QRCode?data=BCD%0a001%0a1%0aSCT%0aKREDBEBB%0a${this.settings.name}%0a${this.requestInput.account}%0a${this.requestInput.amount}%0a%0a${this.requestInput.descr}&backcolor=%23ffffff&method=image`
             let generatedAPIURL = `${window.location.href.split('/?')[0]}?api&r=${this.settings.name}&a=${this.requestInput.account}&m=${this.requestInput.amount}&d=${this.requestInput.descr}&c=${this.requestInput.contact}`
 
-            this.window.code.img.innerHTML = this.generateQRImage(generatedQRSrc);
+            this.window.code.img.innerHTML = checkUrl(generatedQRSrc);
             this.window.code.copy.addEventListener('click', () => {
                 this.copy(generatedAPIURL);
             });
@@ -246,7 +247,7 @@ function registerService(input) {
                 document.body.classList.add('api-detected');
                 // document.querySelector('[data-sesam-trigger="payment"]').click();
 
-                this.window.api.img.src = `https://qrcode.tec-it.com/API/QRCode?data=BCD%0a001%0a1%0aSCT%0aKREDBEBB%0a${this.getQueryVariable('r')}%0a${this.getQueryVariable('a')}%0a${this.getQueryVariable('m')}%0a%0a${decodeURI(this.getQueryVariable('d'))}&backcolor=%23ffffff&method=image`;
+                this.window.api.img.innerHTML = checkUrl(`https://qrcode.tec-it.com/API/QRCode?data=BCD%0a001%0a1%0aSCT%0aKREDBEBB%0a${this.getQueryVariable('r')}%0a${this.getQueryVariable('a')}%0a${this.getQueryVariable('m')}%0a%0a${decodeURI(this.getQueryVariable('d'))}&backcolor=%23ffffff&method=image`);
 
                 this.window.api.name.innerHTML = decodeURI(this.getQueryVariable('r'));
                 this.window.api.reciever.innerHTML = decodeURI(this.getQueryVariable('r'));
@@ -255,6 +256,8 @@ function registerService(input) {
                 this.window.api.descr.innerHTML = decodeURI(this.getQueryVariable('d'));
 
                 this.copy(decodeURI(this.getQueryVariable('a')));
+
+                createToast('account number copied', 'the account number is copied, paste when needed')
             }
         },
 
@@ -285,7 +288,65 @@ function registerService(input) {
             this.generateHistory()
             document.querySelector('[data-label="record-list"] p').classList.remove('d-none');
         },
+
+        
     }
 
     app.initialize();
 })()
+
+function createToast(title, message) {
+    let toast = document.createElement('div');
+    toastIndex ++;
+
+    toast.classList.add('toast', 'animated', 'fadeInRight', 'faster');
+    toast.setAttribute('data-toast', `toastIndex${toastIndex}`);
+    toast.setAttribute('data-delay', `3500`);
+    toast.setAttribute('role', `alert`);
+    toast.setAttribute('aria-atomic', `true`);
+    toast.setAttribute('aria-live', `assertive`);
+
+    toast.innerHTML = `
+        <div class="toast-header d-none">
+            <strong class="mr-auto">${title}</strong>
+            <small class="text-muted d-none">just now</small>
+        </div>
+        <div class="toast-body">
+            <p class="mb-1"><strong>${title}</strong></p>
+            <p claas="mb-0 font-scnd fontw-400">${message}</p>
+        </div>
+    `
+
+    toast.addEventListener('animationend', function() {toast.classList.add('animated', 'fadeOutRight', 'delay-3s')})
+
+    document.querySelector('#toastContainer').appendChild(toast);
+    feather.replace();
+    $(`[data-toast="toastIndex${toastIndex}"]`).toast('show');
+}
+
+	
+function checkUrl(url) {
+    registerService(arguments.callee.name);
+    let request = false;
+    let accept;
+    if (window.XMLHttpRequest) {
+            request = new XMLHttpRequest;
+    } else if (window.ActiveXObject) {
+            request = new ActiveXObject("Microsoft.XMLHttp");
+    }
+
+    if (request) {
+        request.open("GET", url);
+        request.status !== 403 ? accept = true :  accept = false;
+    }
+
+    console.log(`\turl = ${url}`)
+    console.log(`\taccept = ${accept}`)
+
+    if (accept == true) {
+        return `
+            <img src="${url}" width="160px" height="160px">
+        `
+    }
+}
+

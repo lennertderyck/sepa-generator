@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* @mixin text-color($color){
     background-color: $color;
     color: white;
@@ -34,6 +35,7 @@
 }
 
 body {
+  position: relative;
   z-index: 0;
   background-color: white;
 }
@@ -145,6 +147,36 @@ body {
   stroke: #867171;
 }
 
+#toastContainer {
+  --distance: 30px;
+  position: fixed;
+  top: var(--distance);
+  right: 0px;
+  z-index: 100000;
+}
+
+#toastContainer .toast {
+  max-width: 260px;
+  margin-bottom: 17px;
+  border-radius: 7px 0px àpx 7px;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: none;
+  background-color: #EFF5F5;
+}
+
+#toastContainer .toast p {
+  margin-bottom: 0px;
+}
+
+#toastContainer .toast p:last-of-type {
+  font-family: "Solway";
+}
+
+#toastContainer .toast .feather {
+  stroke-width: 3px;
+}
+
 .animated {
   -webkit-transition: all .3s ease-in-out;
   transition: all .3s ease-in-out;
@@ -152,6 +184,12 @@ body {
 
 /* SECTIONS */
 [data-label="qrCode"] {
+  border-radius: 7px;
+  width: 160px;
+  height: 160px;
+}
+
+[data-label="qrCode"] img {
   border-radius: 7px;
   width: 160px;
   height: 160px;
@@ -210,6 +248,50 @@ body.api-detected .sesam-modal[data-label="payment-screen"] {
 
 body.api-detected .sesam-modal[data-label="payment-screen"] .btn-close {
   position: fixed;
+}
+
+.sesam-collapse {
+  -webkit-transform-origin: top;
+          transform-origin: top;
+  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+}
+
+.sesam-collapse.sesam-hidden {
+  overflow: hidden;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+  height: 0px;
+}
+
+.sesam-hidden {
+  -webkit-transform-origin: top;
+          transform-origin: top;
+  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+}
+
+.sesam-hidden .sesam-collapse {
+  overflow: hidden;
+  -webkit-transform: scaleY(0);
+          transform: scaleY(0);
+  height: 0px;
+  -webkit-transform-origin: top;
+          transform-origin: top;
+  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+}
+
+[data-sesam-target="historyList"].sesam-show button[data-sesam-trigger="historyList"] span::before {
+  content: 'hide';
+}
+
+[data-sesam-target="historyList"].sesam-hidden button[data-sesam-trigger="historyList"] span::before {
+  content: 'show';
+}
+
+[data-sesam-target="historyList"].sesam-hidden button[data-label="delete-payment-history"] {
+  display: none;
 }
 
 input.form-control {
